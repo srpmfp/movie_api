@@ -1,7 +1,19 @@
 {
+  "name": "movie_api",
+  "version": "1.0.0",
+  "description": "An app that gathers Move titles, genre, and images related to a database of movies",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/srymfp/movie_api"
+  },
+  "author": "Sean Peters",
+  "license": "ISC",
   "dependencies": {
     "body-parser": "^1.20.3",
-    "express": "^4.21.1",
-    "lodash": "^4.17.21"
+    "express": "^4.21.1"
   }
 }
