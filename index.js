@@ -28,7 +28,6 @@ app.use(morgan('combined', { stream: accessLogstream }));
 //  returns get method requests
 app.get('/', (req, res) => {
     res.send('Welcome to my movie database')
-    res.send(responseText)
 })
 
 app.get('/movies', (req, res) => {
