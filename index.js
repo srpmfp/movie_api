@@ -8,22 +8,70 @@ const express = require('express'),
 
 const app = express();
 
-
-
-
 // test json
 let movies = [
     {
-        'key': 'value',
-        'key2': 'value2'
+        'rating': 1,
+        'Movie': 'Back to the Future',
+        'Genre': 'Comedy'
+    },
+    {
+        'rating': 2,
+        'Movie': 'Good Will Hunting',
+        'Genre': 'Drama'
+    },
+    {
+        'rating': 3,
+        'Movie': 'Mrs. Doubtfire',
+        'Genre': 'Comedy'
+    },
+    {
+        'rating': 4,
+        'Movie': 'Shawshank Redemption',
+        'Genre': 'Drama'
+    },
+    {
+        'rating': 5,
+        'Movie': 'Spirited Away',
+        'Genre': 'Anime'
+    },
+    {
+        'rating': 6,
+        'Movie': 'Lord of the Rings: Fellowship of the Ring',
+        'Genre': 'Fantasy'
+    },
+    {
+        'rating': 7,
+        'Movie': 'Gladiator',
+        'Genre': 'Period'
+    },
+    {
+        'rating': 8,
+        'Movie': 'The Last Samurai',
+        'Genre': 'Period'
+    },
+    {
+        'rating': 9,
+        'Movie': 'Starwars Vi: Return of the Jedi',
+        'Genre': 'Sci-fi'
+    },
+    {
+        'rating': 10,
+        'Movie': 'Princess Mononoke',
+        'Genre': 'Anime'
     }
 ];
 
+// gathering static HTML pages from public
+app.use(express.static('public'));
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+app.use(bodyParser.json());
 
 
-// logs entries into the log.txt
-const accessLogstream = fs.createWriteStream(path.join(__dirname, 'log.txt'), { flags: 'a' });
-app.use(morgan('combined', { stream: accessLogstream }));
+// logs entries into the terminal
+app.use(morgan('common'));
 
 //  returns get method requests
 app.get('/', (req, res) => {
@@ -33,17 +81,6 @@ app.get('/', (req, res) => {
 app.get('/movies', (req, res) => {
     res.json(movies);
 });
-
-
-// gathering static HTML pages from public
-app.use(express.static('public'));
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
-
-
-app.use(bodyParser.json());
-app.use(methodOverride());
 
 //error handling
 app.use((err, req, res, next) => {
