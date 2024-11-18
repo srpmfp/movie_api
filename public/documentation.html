@@ -1,12 +1,356 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body>
-    <h1>Movie API Documentation</h1>
-    <p>This API is to provide users access to info on movies, their directors, and genres..no</p>
-  </body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>My Movie API</title>
+        <link rel="stylesheet" href="styles.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <h1>Movie API Documentation</h1>
+        <p>This API is to provide users access to info on movies, their directors, and genres..no</p>
+        <div class="userCont textCont">
+            <h2 aria-label="User Section">Users</h2>
+            <a href="#userPost">
+                <b>
+                    <span>POST</span>
+                    /users
+                </b>
+                | create new user
+            </a
+      >
+            <br>
+            <a href="#userMoviePost">
+                <b>
+                    <span>POST</span>
+                    /users/:id/:movieTitle
+                </b>
+                | add movie to users favorite
+                <br>
+            </a>
+            <a href="#userGet">
+                <b>
+                    <span>GET</span>
+                    /users
+                </b>
+                | get list of all users and their favorite movies
+                <br>
+            </a>
+            <a href="#userPut">
+                <b>
+                    <span>PUT</span>
+                    /users/:id
+                </b>
+                | update users information
+                <br>
+            </a>
+            <a href="#userMovieDelete">
+                <b>
+                    <span>DELETE</span>
+                    /users/:id/:movieTitle
+                </b>
+                || remove a movie from user's favorite
+                <br>
+            </a>
+            <a href="#userDelete">
+                <b>
+                    <span>DELETE</span>
+                    /user/:i
+                </b>
+                | remove user
+                <br>
+            </a>
+        </div>
+        <div class="movieCont textCont">
+            <h2 aria-label="Movie Section">Movies</h2>
+            <a href="#moviePost">
+                <b>
+                    <span>POST</span>
+                    /movies
+                </b>
+                | add new movies to the list
+                <br>
+            </a>
+            <a href="#movieTitleGet">
+                <b>
+                    <span>GET</span>
+                    /movies/:title
+                </b>
+                | selects a movie by title and displays its
+      information
+                <br>
+            </a>
+            <a href="#movieGenreGet">
+                <b>
+                    <span>GET</span>
+                    /movies/genre/:genreName
+                </b>
+                | displays information about the genre
+                <br>
+            </a>
+            <a href="#movieDirGet">
+                <b>
+                    <span>GET</span>
+                    /movies/director/:dirName
+                </b>
+                | displays information about the director
+                <br>
+            </a>
+        </div>
+        <table>
+            <tr>
+                <th>Business Logic</th>
+                <th>URL</th>
+                <th>HTTP Method</th>
+                <th>Request Body Data Format</th>
+                <th>Response Body Data Format</th>
+            </tr>
+            <tr>
+                <td class="titleTable" colspan="5">Users</td>
+            </tr>
+            <!-- New User -->
+            <tr id="userPost">
+                <td>Create new user</td>
+                <td>/users</td>
+                <td>Post</td>
+                <td>
+                    <div class="json">
+                        <br>
+                        <div class="indent">{</div>
+                        "name": "kyle murphy",
+                        <br>
+                        "movieTitle": []
+                        <br>
+                        <div class="indent"> }</div>
+                        <br>
+                    </div>
+                </td>
+                <td></td>
+            </tr>
+            <!-- User Add Movie -->
+            <tr id="userMoviePost">
+                <td>Add movie to users favorite</td>
+                <td>/users/:id/:movieTitle</td>
+                <td>Post</td>
+                <td>
+                    <div class="json">
+                        {
+                        <br>
+                        id: 2;
+                        <br>
+                        movieTitle: "the good the bad and the ugly"
+                        <br>
+                        }
+                    </div>
+                </td>
+                <td></td>
+            </tr>
+            <!-- Get Users -->
+            <tr id="userGet">
+                <td>Get all Users</td>
+                <td>/users</td>
+                <td>GET</td>
+                <td></td>
+                <td>
+                    <div class="json">
+                        <br>
+                        {
+                        <br>
+                        "name": "kyle murphy",
+                        <br>
+                        "email": "kmurph@nunya.com",
+                        <br>
+                        "id": 1,
+                        <br>
+                        "movieTitle": []
+                        <br>
+                        }
+                        <br>
+                    </div>
+                </td>
+            </tr>
+            <!-- User Update -->
+            <tr id="userPut">
+                <td>Update  User Name</td>
+                <td>/users/:id</td>
+                <td>PUT</td>
+                <td>
+                    <div class="json">
+                        <br>
+                        {
+                        <br>
+                        "name": "kyle murphy",
+                        <br>
+                        }
+                    </div>
+                </td>
+                <td></td>
+            </tr>
+            <!-- User Delete Movie -->
+            <tr id="userMovieDelete">
+                <td>Delete movie from user's list</td>
+                <td>/users/:id/:movieTitle</td>
+                <td>DELETE</td>
+                <td></td>
+                <td>
+                    <div class="json">
+                        <br>
+                        {
+                        <br>
+                        "name": "kyle murphy",
+                        <br>
+                        "email": "kmurph@nunya.com",
+                        <br>
+                        "id": 1,
+                        <br>
+                        "movieTitle": []
+                        <br>
+                        }
+                        <br>
+                    </div>
+                </td>
+            </tr>
+            <!-- User Delete -->
+            <tr id="userDelete">
+                <td>Delete user</td>
+                <td>/users/:id</td>
+                <td>DELETE</td>
+                <td>
+                    <div class="json">
+                        <br>
+                        {
+                        <br>
+                        "id": 1,
+                        <br>
+                        <br>
+                        }
+                        <br>
+                    </div>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="titleTable" colspan="5">Movies</td>
+            </tr>
+            <tr>
+                <!-- Add movie to List-->
+                <td id="moviePost">Add new movie</td>
+                <td>/movies</td>
+                <td>POST</td>
+                <td>
+                    <div class="json">
+                        {
+                        <br>
+                        "title":"armageddon"
+                        <br>
+                        }
+                        <br>
+                        only "title" is requrired
+                    </div>
+                </td>
+                <td>
+                    <span>
+                        <br>
+                    </span
+          >
+                </td>
+            </tr>
+            <tr>
+                <td id="movieTitleGet">Get single movie by title</td>
+                <td>/movies/:title</td>
+                <td>GET</td>
+                <td>
+                    accessed in Params e.g. ".../movies/gladiator"
+                </td>
+                <td>
+                    <div class="json">
+                        [
+                        <br>
+                        {
+                        <br>
+                        "rating": 7,
+                        <br>
+                        "title": "Gladiator",
+                        <br>
+                        "genre": "Period",
+                        <br>
+                        "director": {
+                        <br>
+                        "name": "Ridley Scott",
+                        <br>
+                        "birthday": "November 30th 1937",
+                        <br>
+                        "death": "Alive"
+                        <br>
+                        },
+                        <br>
+                        "image": "image.link"
+                        <br>
+                        }
+                        <br>
+                        ]
+                        <br>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td id="movieGenreGet">Get movies via genre association</td>
+                <td>/movies/genre/:genre</td>
+                <td>POST</td>
+                <td> accessed in Params e.g. ".../movies/genre/thriller"</td>
+                <td>
+                    <div class="json">
+                        {
+                        <br>
+                        "rating": 8,
+                        <br>
+                        "title": "The Last Samurai",
+                        <br>
+                        "genre": "Period",
+                        <br>
+                        "director": {
+                        <br>
+                        "name": "Edward Zwick",
+                        <br>
+                        "birthday": "October 8th 1952",
+                        <br>
+                        "death": "Alive"
+                        <br>
+                        },
+                        <br>
+                        "image": "image.link"
+                        <br>
+                        }
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td id="movieDirGet">Get directors information</td>
+                <td>/users</td>
+                <td>GET</td>
+                <td>
+                    Accessed via Params e.g. ".../movies/directors/
+                    <br>
+                    edward%20zwick"
+                </td>
+                <td>
+                    <div class="json">
+                        {
+                        <br>
+                        "name": "Edward Zwick",
+                        <br>
+                        "birthday": "October 8th 1952",
+                        <br>
+                        "death": "Alive"
+                        <br>
+                        }
+                        <br>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </body>
 </html>
