@@ -303,7 +303,7 @@ app.delete('/users/:id/:movieTitle', (req, res) => {
     if (!user) {
         res.status(400).send('user not  found');
     } else {
-        user.movieTitle = user.movieTitle.find(title => title != movieTitle);
+        user.movieTitle = user.movieTitle.filter(title => title != movieTitle);
         res.status(200).send(`${movieTitle} has been removed to user ${id}'s movie list`);
     }
 
