@@ -61,8 +61,11 @@ app.post('/users/:id/movies/:movieId', async (req, res) => {
     },
         { new: true }).then(userUpd => {
             return res.json(userUpd)
+        }).catch(err => {
+            res.status(500).send(`Error: ${err}`)
         })
-})
+});
+
 
 
 app.post('/movies', async (req, res) => {
@@ -98,30 +101,10 @@ app.post('/movies', async (req, res) => {
 // start page//
 app.get('/', (req, res) => {
     res.send('Welcome to my movie database\n start by adding /movies to your request to see the JSON')
-})
-
-
-// users///
-
-app.get('/users', async (req, res) => {
-    await user.find().then(users => {
-        res.status(201).json(users);
-    }).catch(err => {
-        res.status(500).send(`Error: ${err}`)
-    })
+}).catch(err => {
+    res.status(500).send(`Error: ${err}`)
 });
 
-
-
-// movies
-app.get('/movies', async (req, res) => {
-    await movie.find().then(movie => {
-        res.status(201).json(movie)
-    }).catch(err => {
-        res.status(500).send(`Error: ${err}`)
-    })
-
-});
 
 
 // movies by title
@@ -161,7 +144,7 @@ app.get('/movies/genre/:genreName', async (req, res) => {
 // movies by director
 app.get('/movies/director/:dirName', async (req, res) => {
     const { dirName } = req.params;
-    await movie.find({ "director.name": dirName }).then((movies) => {
+    await movie.findOne({ "director.name": dirName }).then((movies) => {
 
         // finds movies with directors name
         if (movies.length > 0) {
@@ -213,19 +196,16 @@ app.put('/users/:id', async (req, res) => {
 
 app.delete('/users/:id/', async (req, res) => {
     const { id } = req.params;
-    try {
-        const delUser = await user.findOne({ _id: id });
+    await user.findByIdAndDelete({ _id: id }).then(delUser => {
         if (delUser) {
-            return res.status(204).send('User has been removed')
+            return res.status(204).send(`User ${id} has been removed`);
         } else {
-            return res.status(404).send('User not found')
-        };
-    }
-    catch {
+            return res.status(404).send('User not found');
+        }
+    }).catch
         (err => {
             res.status(500).send(`Error: ${err}`)
         });
-    }
 });
 
 // remove movies from list
