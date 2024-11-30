@@ -39,12 +39,13 @@ app.post('/users', async (req, res) => {
             user.create({
                 name: req.body.name,
                 email: req.body.email,
+                password: req.body.password,
                 birthday: req.body.birthday,
                 movieTitles: req.body.MovieTitles
             }).then((user) => {
                 res.status(200).json(user);
             }).catch((err) => {
-                res.status(500).throw(`Error: ${err}`)
+                res.status(500).send(`Error: ${err}`)
             })
         };
     })
@@ -101,10 +102,20 @@ app.post('/movies', async (req, res) => {
 // start page//
 app.get('/', (req, res) => {
     res.send('Welcome to my movie database\n start by adding /movies to your request to see the JSON')
-}).catch(err => {
-    res.status(500).send(`Error: ${err}`)
 });
 
+
+
+
+// movies
+app.get('/movies', async (req, res) => {
+    await movie.find().then(movie => {
+        res.status(201).json(movie)
+    }).catch(err => {
+        res.status(500).send(`Error: ${err}`)
+    })
+
+});
 
 
 // movies by title
@@ -144,7 +155,7 @@ app.get('/movies/genre/:genreName', async (req, res) => {
 // movies by director
 app.get('/movies/director/:dirName', async (req, res) => {
     const { dirName } = req.params;
-    await movie.findOne({ "director.name": dirName }).then((movies) => {
+    await movie.find({ "director.name": dirName }).then((movies) => {
 
         // finds movies with directors name
         if (movies.length > 0) {
