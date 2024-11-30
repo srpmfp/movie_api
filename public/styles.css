@@ -47,10 +47,11 @@ table {
     }
 
     & td {
-        max-width: 8em;
+        max-width: 9em;
         min-width: fit-content;
         text-align: center;
         border: 1px inset rgb(148, 132, 112);
+        word-break: break-all;
 
     }
 }

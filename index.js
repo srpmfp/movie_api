@@ -3,161 +3,15 @@ const express = require('express'),
     morgan = require('morgan'),
     bodyParser = require('body-parser');
 
+const mongoose = require('mongoose');
+const models = require('./models.js');
+
+
 const app = express();
-const uuid = require("uuid");
+const movie = models.movie;
+const user = models.User;
 
-// USERS ARRAY
 
-let users = [
-    {
-        name: 'kyle murphy',
-        email: 'kmurph@nunya.com',
-        id: 1,
-        movieTitle: []
-    },
-    {
-        name: 'myles kurphy',
-        email: 'mKurph@nunya.com',
-        id: 2,
-        movieTitle: ["the shinning"]
-
-    }
-]
-
-// MOVIE ARRAY
-let movies = [
-    {
-        rating: 1,
-        title: 'Back to the Future',
-        genre: 'Comedy',
-        director:
-        {
-            name: 'Robert Zemeckis',
-            birthday: 'May 15th 1952',
-            death: 'Alive',
-        }
-        ,
-        image: 'https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/7c138730698845.562f39291400d.jpg'
-
-    },
-    {
-        rating: 2,
-        title: 'Good Will Hunting',
-        genre: 'Drama',
-        director:
-        {
-            name: 'Gus Van Sant',
-            birthday: 'July 24th 1952',
-            death: 'Alive',
-        }
-        ,
-        image: 'https://image.tmdb.org/t/p/original/bABCBKYBK7A5G1x0FzoeoNfuj2.jpg'
-    },
-    {
-        rating: 3,
-        title: 'Mrs. Doubtfire',
-        genre: 'Comedy',
-        director:
-        {
-            name: 'Chris Columbus',
-            birthday: 'September 10th 1958',
-            death: '',
-        }
-        ,
-        image: 'https://www.themoviedb.org/t/p/original/eRrIeSCSFdEKjJCJG6whklICM9N.jpg'
-    },
-    {
-        rating: 4,
-        title: 'Shawshank Redemption',
-        genre: 'Drama',
-        director:
-        {
-            name: 'Frank Darabont',
-            birthday: 'January 28th 1959',
-            death: 'Alive',
-        }
-        ,
-        image: 'https://image.tmdb.org/t/p/original/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg'
-    },
-    {
-        rating: 5,
-        title: 'Spirited Away',
-        genre: 'Anime',
-        director:
-        {
-            name: 'Hayao Miyazaki',
-            birthday: 'January 5th 1941',
-            death: 'Alive',
-        }
-        ,
-        image: 'https://image.tmdb.org/t/p/original/fJGWeVHGuLSWbGShaxICAUCzBE5.jpg'
-    },
-    {
-        rating: 6,
-        title: 'Lord of the Rings: Fellowship of the Ring',
-        genre: 'Fantasy',
-        director:
-        {
-            name: 'Peter Jackson',
-            birthday: 'October 31st 1961',
-            death: 'Alive',
-        }
-        ,
-        image: 'https://th.bing.com/th/id/OIP.Fe-zd7pd7lKnwdBauA28UQHaLH?rs=1&pid=ImgDetMain'
-    },
-    {
-        rating: 7,
-        title: 'Gladiator',
-        genre: 'Period',
-        director:
-        {
-            name: 'Ridley Scott',
-            birthday: 'November 30th 1937',
-            death: 'Alive',
-        }
-        ,
-        image: 'https://image.tmdb.org/t/p/original/mZpjmpXN6cyYiTOtTnigG4aa1bP.jpg'
-    },
-    {
-        rating: 8,
-        title: 'The Last Samurai',
-        genre: 'Period',
-        director:
-        {
-            name: 'Edward Zwick',
-            birthday: 'October 8th 1952',
-            death: 'Alive',
-        }
-        ,
-        image: 'https://image.tmdb.org/t/p/original/tGI6kqOIDgTw4DhEhGhV542VGf3.jpg'
-    },
-    {
-        rating: 9,
-        title: 'Starwars Vi: Return of the Jedi',
-        genre: 'Sci-fi',
-        director:
-        {
-            name: 'Richard Marquand',
-            birthday: 'September 22 1937',
-            death: 'September 4 1987',
-        }
-        ,
-        image: 'https://image.tmdb.org/t/p/original/ydjp1K13GrnbiX0yjd398BI9xaC.jpg'
-    },
-    {
-        rating: 10,
-        title: 'Princess Mononoke',
-        genre: 'Anime',
-        director:
-        {
-            name: 'Hayao Miyazaki',
-            birthday: 'January 5th 1941',
-            death: 'Alive',
-        }
-        ,
-        image: 'https://d28hgpri8am2if.cloudfront.net/book_images/onix/cvr9781421565972/art-of-princess-mononoke-9781421565972_hr.jpg'
-    }
-];
 
 // gathering static HTML pages from public
 app.use(express.static('public'));
@@ -170,53 +24,74 @@ app.use(bodyParser.json());
 // logs entries into the terminal
 app.use(morgan('common'));
 
-
-
+mongoose.connect('mongodb://localhost:27017/myMovie')
 
 ///CREATE///
 
 // adding user
 
-app.post('/users', (req, res) => {
-    const newUser = req.body;
-
-    if (!newUser.name) {
-        return res.status(400).send(`please include your name`);
-    } else {
-        newUser.id = uuid.v4();
-        users.push(newUser);
-        // return res.status(201).send('New user added');
-        return res.status(201).json(newUser);
-    };
-
+app.post('/users', async (req, res) => {
+    // const newUser = req.body;
+    await user.findOne({ name: req.body.name }).then((nUser) => {
+        if (nUser) {
+            return res.status(400).send(`${req.body.name} already exists`);
+        } else {
+            user.create({
+                name: req.body.name,
+                email: req.body.email,
+                birthday: req.body.birthday,
+                movieTitles: req.body.MovieTitles
+            }).then((user) => {
+                res.status(200).json(user);
+            }).catch((err) => {
+                res.status(500).throw(`Error: ${err}`)
+            })
+        };
+    })
 });
 
-// adding movie
-app.post('/movies', (req, res) => {
-    let newMovie = req.body;
-    if (!newMovie.title) {
-        const message = "No title for movie"
-        res.status(400).send(message);
-    } else {
-        movies.push(newMovie);
-        res.status(201).send(newMovie)
-    }
+// add movie to userList
+
+app.post('/users/:id/movies/:movieId', async (req, res) => {
+
+    await user.findByIdAndUpdate({ _id: req.params.id }, {
+        $push: {
+            movieTitles: req.params.movieId
+        }
+    },
+        { new: true }).then(userUpd => {
+            return res.json(userUpd)
+        })
 })
 
-// adding favorite movies
 
-app.post('/users/:id/:movieTitle', (req, res) => {
-    const { id, movieTitle } = req.params;
+app.post('/movies', async (req, res) => {
 
-    let user = users.find(user => user.id == id);
+    // const newUser = req.body;
+    await user.findOne({ title: req.body.title }).then((nMovie) => {
 
-    if (!user) {
-        res.status(400).send('user not found');
-    } else {
-        user.movieTitle.push(movieTitle)
-        res.status(200).send(`${movieTitle} has been added to user ${id}'s movie list`)
-    }
-})
+        if (nMovie) {
+            return res.status(400).send(`${req.body.name} already exists`);
+        } else {
+            movie.create({
+                title: req.body.title,
+                genre: req.body.email,
+                director: {
+                    bio: req.body.director.bio,
+                    name: req.body.director.name,
+                    birthday: req.body.director.birthday,
+                    death: req.body.director.death
+                },
+                image: req.body.image
+            }).then((movie) => {
+                res.status(200).json(movie);
+            }).catch((err) => {
+                res.status(500).throw(`Error: ${err}`)
+            })
+        };
+    })
+});
+
 
 ///READ///
 
@@ -228,107 +103,151 @@ app.get('/', (req, res) => {
 
 // users///
 
-app.get('/users', (req, res) => {
-    res.status(200).json(users);
+app.get('/users', async (req, res) => {
+    await user.find().then(users => {
+        res.status(201).json(users);
+    }).catch(err => {
+        res.status(500).send(`Error: ${err}`)
+    })
 });
 
 
 
 // movies
-app.get('/movies', (req, res) => {
-    res.status(200).json(movies);
+app.get('/movies', async (req, res) => {
+    await movie.find().then(movie => {
+        res.status(201).json(movie)
+    }).catch(err => {
+        res.status(500).send(`Error: ${err}`)
+    })
+
 });
 
 
 // movies by title
-app.get('/movies/:title', (req, res) => {
-    const { title } = req.params;
-    const results = movies.filter(movies => movies.title.toLowerCase() === title.toLowerCase());
-    if (results) {
-        return res.status(200).json(results)
-    } else {
-        return res.status(400).send('no such movie exists')
-    }
+app.get('/movies/:title', async (req, res) => {
+    await movie.find({ title: req.params.title }).then((movie) => {
+
+        if (movie) {
+            return res.status(201).json(movie);
+        }
+        else {
+            return res.status(400).send('no such movie exists');
+        }
+    }).catch(err => {
+        res.status(500).send(`Error: ${err}`)
+    })
+});
+// movies  by genre
+
+app.get('/movies/genre/:genreName', async (req, res) => {
+    const { genreName } = req.params;
+    await movie.find({ genre: genreName }).then((genre) => {
+
+        if (genre) {
+            return res.status(201).json(genre);
+        }
+        else {
+            return res.status(400).send('no such movie exists');
+        }
+    }).catch(err => {
+        res.status(500).send(`Error: ${err}`)
+    })
 });
 
-// movies  by genre
-app.get('/movies/genre/:genreName', (req, res) => {
-    const { genreName } = req.params;
-    const results = movies.filter(movies => movies.genre.toLowerCase() === genreName.toLowerCase());
-    if (results) {
-        return res.status(200).json(results)
-    } else {
-        return res.status(400).send('no such genre')
-    }
-});
+
 
 
 // movies by director
-app.get('/movies/director/:dirName', (req, res) => {
+app.get('/movies/director/:dirName', async (req, res) => {
     const { dirName } = req.params;
-    const results = movies.find(movie => movie.director.name.toLowerCase() === dirName.toLowerCase()).director;
+    await movie.find({ "director.name": dirName }).then((movies) => {
 
-    if (results) {
-        res.status(200).json(results);
-    } else {
-        res.status(400).send(`this director isn't in the database`)
-    }
+        // finds movies with directors name
+        if (movies.length > 0) {
+            const directors = movies.map(movie => movie.director) // maps specific info to new variable
+            return res.status(201).json(
+                directors);
+        }
+        else {
+            return res.status(400).send('no director by name in list');
+        }
+    }).catch(err => {
+        return res.status(500).send('Error: ' + err)
 
-
+    })
 });
+
 
 //UPDATE///
 
-app.put('/users/:id', (req, res) => {
+app.put('/users/:id', async (req, res) => {
+
     const { id } = req.params;
     const updateUser = req.body;
-    let user = users.find(user => user.id == id);
-    if (!user) {
-        return res.status(400).send(`please use the right id`);
-    } else {
+    await user.findOneAndUpdate({ _id: id }, {
 
-        user.name = updateUser.name;
-        return res.status(200).json(user);
-    };
 
+
+        $set: {
+
+            name: updateUser.name,
+            email: updateUser.email,
+            birthday: updateUser.birthday,
+
+        }
+
+    },
+        { new: true }
+    ).then(updatedUser => {
+        return res.status(200).json(updatedUser)
+    }).catch(err => {
+        res.status(500).send(`Error: ${err}`)
+    })
 });
 
 //DELETE
 
-app.delete('/users/:id/:movieTitle', (req, res) => {
-    const { id, movieTitle } = req.params;
 
-    let user = users.find(user => user.id == id);
 
-    if (!user) {
-        res.status(400).send('user not  found');
-    } else {
-        user.movieTitle = user.movieTitle.filter(title => title != movieTitle);
-        res.status(200).send(`${movieTitle} has been removed to user ${id}'s movie list`);
+
+app.delete('/users/:id/', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const delUser = await user.findOne({ _id: id });
+        if (delUser) {
+            return res.status(204).send('User has been removed')
+        } else {
+            return res.status(404).send('User not found')
+        };
     }
-
+    catch {
+        (err => {
+            res.status(500).send(`Error: ${err}`)
+        });
+    }
 });
 
-app.delete('/users/:id/', (req, res) => {
-    const { id } = req.params;
+// remove movies from list
+app.delete('/users/:id/movies/:movieId', async (req, res) => {
 
-    let user = users.find(user => user.id == id);
-
-    if (user) {
-        users = users.filter(user => user.id != id);
-        res.status(200).send(`user ${id}, ${user.name}, has been removed`);
-
-    } else {
-        res.status(400).send('user not  found');
-
-    }
-
+    await user.findByIdAndUpdate({ _id: req.params.id }, {
+        $pull: {
+            movieTitles: req.params.movieId
+        }
+    },
+        { new: true }).then(userUpd => {
+            return res.json(userUpd)
+        }).catch(err => {
+            res.status(500).send(`Error: ${err}`)
+        })
 })
+
 
 //error handling
 app.use((err, req, res, next) => {
     console.log(err.stack);
-    res.status(500).send('Something Broke!!')
+    res.status(500).send(`Error: ${err}`)
 });
 
 app.listen(8080, () => {

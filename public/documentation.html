@@ -14,31 +14,26 @@
         <p>This API is to provide users access to info on movies, their directors, and genres..no</p>
         <div class="userCont textCont">
             <h2 aria-label="User Section">Users</h2>
+
+            <!--    CREATE NEW USER-->
             <a href="#userPost">
                 <b>
                     <span>POST</span>
                     /users
                 </b>
                 | create new user
-            </a
-      >
+            </a>
+                <!-- ADD MOVIE TO FAV -->
             <br>
             <a href="#userMoviePost">
                 <b>
                     <span>POST</span>
-                    /users/:id/:movieTitle
+                   /users/:id/movies/:movieId
                 </b>
                 | add movie to users favorite
                 <br>
             </a>
-            <a href="#userGet">
-                <b>
-                    <span>GET</span>
-                    /users
-                </b>
-                | get list of all users and their favorite movies
-                <br>
-            </a>
+            <!-- UPDATE USER INFO-->
             <a href="#userPut">
                 <b>
                     <span>PUT</span>
@@ -47,14 +42,16 @@
                 | update users information
                 <br>
             </a>
+            <!-- DELETE USER MOVIE -->
             <a href="#userMovieDelete">
                 <b>
                     <span>DELETE</span>
-                    /users/:id/:movieTitle
+                  /users/:id/movies/:movieId
                 </b>
-                || remove a movie from user's favorite
+                | remove a movie from user's favorite
                 <br>
             </a>
+            <!-- REMOVE USER -->
             <a href="#userDelete">
                 <b>
                     <span>DELETE</span>
@@ -66,7 +63,7 @@
         </div>
         <div class="movieCont textCont">
             <h2 aria-label="Movie Section">Movies</h2>
-    
+            <!-- UPDATE DIR -->
             <a href="#moviePost">
                 <b>
                     <span>PUT</span>
@@ -84,23 +81,7 @@
                 | Update the description of the movies
                 <br>
             </a>
-            <a href="#moviePost">
-                <b>
-                    <span>POST</span>
-                    /movies
-                </b>
-                | add new movies to the list
-                <br>
-            </a>
             
-            <a href="#moviePost">
-                <b>
-                    <span>POST</span>
-                    /movies
-                </b>
-                | add new movies to the list
-                <br>
-            </a>
             <a href="#movieTitleGet">
                 <b>
                     <span>GET</span>
@@ -115,7 +96,7 @@
                     <span>GET</span>
                     /movies/genre/:genreName
                 </b>
-                | displays information about the genre
+                | returns information about the genre
                 <br>
             </a>
             <a href="#movieDirGet">
@@ -123,7 +104,7 @@
                     <span>GET</span>
                     /movies/director/:dirName
                 </b>
-                | displays information about the director
+                |returns information about the director
                 <br>
             </a>
         </div>
@@ -175,33 +156,10 @@
                 </td>
                 <td></td>
             </tr>
-            <!-- Get Users -->
-            <tr id="userGet">
-                <td>Get all Users</td>
-                <td>/users</td>
-                <td>GET</td>
-                <td></td>
-                <td>
-                    <div class="json">
-                        <br>
-                        {
-                        <br>
-                        "name": "kyle murphy",
-                        <br>
-                        "email": "kmurph@nunya.com",
-                        <br>
-                        "id": 1,
-                        <br>
-                        "movieTitle": []
-                        <br>
-                        }
-                        <br>
-                    </div>
-                </td>
-            </tr>
+
             <!-- User Update -->
             <tr id="userPut">
-                <td>Update  User Name</td>
+                <td>Update  User info</td>
                 <td>/users/:id</td>
                 <td>PUT</td>
                 <td>
@@ -209,7 +167,10 @@
                         <br>
                         {
                         <br>
-                        "name": "kyle murphy",
+                        *"name": "kyle murphy",<br>
+                        *"Email": "test@email.com",<br>
+                        "birthday": "1998-03-24", (YYYY-MM-DD)<br>
+                        "movieTitles": "234234235667" (movieIds)
                         <br>
                         }
                     </div>
@@ -219,7 +180,7 @@
             <!-- User Delete Movie -->
             <tr id="userMovieDelete">
                 <td>Delete movie from user's list</td>
-                <td>/users/:id/:movieTitle</td>
+                <td>/users/:id/:movieId</td>
                 <td>DELETE</td>
                 <td></td>
                 <td>
@@ -247,13 +208,8 @@
                 <td>DELETE</td>
                 <td>
                     <div class="json">
-                        <br>
-                        {
-                        <br>
-                        "id": 1,
-                        <br>
-                        <br>
-                        }
+                        Accessed through params: <br>
+                        /users/9983545lk53sab
                         <br>
                     </div>
                 </td>
@@ -264,25 +220,40 @@
             </tr>
             <tr>
                 <!-- Add movie to List-->
-                <td id="moviePost">Add new movie</td>
+                <td id="moviePost">Get all movies</td>
                 <td>/movies</td>
-                <td>POST</td>
+                <td>GET</td>
                 <td>
-                    <div class="json">
+                </td>
+                <td>
+                                <div class="json">
+                        [
+                        <br>
                         {
                         <br>
-                        "title":"armageddon"
+                        "rating": 7,
+                        <br>
+                        "title": "Gladiator",
+                        <br>
+                        "genre": "Period",
+                        <br>
+                        "director": {
+                        <br>
+                        "name": "Ridley Scott",
+                        <br>
+                        "birthday": "November 30th 1937",
+                        <br>
+                        "death": "Alive"
+                        <br>
+                        },
+                        <br>
+                        "image": "image.link"
                         <br>
                         }
                         <br>
-                        only "title" is requrired
-                    </div>
-                </td>
-                <td>
-                    <span>
+                        ]
                         <br>
-                    </span
-          >
+                    </div>
                 </td>
             </tr>
             <tr>
@@ -358,7 +329,7 @@
             </tr>
             <tr>
                 <td id="movieDirGet">Get directors information</td>
-                <td>/director/:dirName</td>
+                <td>movies/director/:dirName</td>
                 <td>GET</td>
                 <td>
                     Accessed via Params e.g. ".../movies/directors/
