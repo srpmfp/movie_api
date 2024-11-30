@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
 let movieSchema = mongoose.Schema({
-    title: { type: String, require: true },
-    genre: { type: String, require: true },
+    title: { type: String, required: true },
+    genre: { type: String, required: true },
     director: {
         bio: String,
         name: String,
@@ -13,8 +13,9 @@ let movieSchema = mongoose.Schema({
 })
 
 let userSchema = mongoose.Schema({
-    name: { type: String, require: true },
-    email: { type: String, require: true },
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    password: { type: String, required: true },
     birthday: Date,
     movieTitles: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Movie' }]
 })
