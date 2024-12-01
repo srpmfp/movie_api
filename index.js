@@ -21,6 +21,13 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 
+
+let auth = require('./auth')(app);
+const passport = require('passport');
+require = ('./passport');
+
+
+
 // logs entries into the terminal
 app.use(morgan('common'));
 
@@ -37,9 +44,9 @@ app.post('/users', async (req, res) => {
             return res.status(400).send(`${req.body.name} already exists`);
         } else {
             user.create({
-                name: req.body.name,
+                Username: req.body.Username,
                 email: req.body.email,
-                password: req.body.password,
+                Password: req.body.Password,
                 birthday: req.body.birthday,
                 movieTitles: req.body.MovieTitles
             }).then((user) => {
@@ -108,7 +115,7 @@ app.get('/', (req, res) => {
 
 
 // movies
-app.get('/movies', async (req, res) => {
+app.get('/movies', passport.authenticate('jwt', { session: false }), async (req, res) => {
     await movie.find().then(movie => {
         res.status(201).json(movie)
     }).catch(err => {
