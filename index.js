@@ -10,6 +10,7 @@ const models = require('./models.js');
 const app = express();
 const movie = models.movie;
 const user = models.User;
+const { check, validationResult } = require('express-validator');
 
 
 
@@ -20,7 +21,8 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-
+let cors = require('cors');
+app.use(cors());
 
 let auth = require('./auth')(app);
 const passport = require('passport');
@@ -37,37 +39,67 @@ mongoose.connect('mongodb://localhost:27017/myMovie')
 
 // adding user
 
-app.post('/users', async (req, res) => {
+app.post('/users', [
+    // input validation
+    check('Username', 'Username is required')
+        .not().isEmpty(),
+    check('Username', 'Username contains non-alphanumeric characters')
+        .isAlphanumeric(),
+    check('email', 'Email does not appear to be valid')
+        .isEmail(),
+    check('birthday', 'must be a date in yyyy-mm-dd format').isDate()
+],
+    async (req, res) => {
+        let hashedPassword = user.hashPassword(req.body.Password);
+        await user.findOne({ Username: req.body.Username }).then((nUser) => {
 
-    await user.findOne({ Username: req.body.Username }).then((nUser) => {
-        if (nUser) {
-            return res.status(400).send(`${req.body.name} already exists`);
-        } else {
-            user.create({
-                Username: req.body.Username,
-                email: req.body.email,
-                Password: req.body.Password,
-                birthday: req.body.birthday,
-                movieTitles: req.body.MovieTitles
-            }).then((user) => {
-                res.status(200).json(user);
-            }).catch((err) => {
-                res.status(500).send(`Error: ${err}`)
-            })
-        };
-    })
-});
+            // empty pw check
+            if (!req.body.Password) {
+                res.status(500).send('Error: Password cannot be empty')
+            } else {
+                if (nUser) {
+                    //  username already exists
+                    return res.status(400).send(`${req.body.name} already exists`);
+                } else {
+                    // create user
+                    user.create({
+
+                        Username: req.body.Username,
+                        email: req.body.email,
+                        Password: hashedPassword,
+                        birthday: req.body.birthday,
+                        movieTitles: []
+
+                    }).then((user) => {
+
+                        res.status(200).json(user);
+
+                    }).catch((err) => {
+
+                        res.status(500).send(`Error: ${err}`)
+                    })
+                };
+            }
+        })
+    });
 
 // add movie to userList
 
-app.post('/users/:username/movies/:movieId', passport.authenticate('jwt', { session: false }), async (req, res) => {
+app.post('/users/:username/', [
+    check('movieTitles', '').isAlphanumeric(),
+    check('movieTitles').not().isEmpty()
+], passport.authenticate('jwt', { session: false }), async (req, res) => {
+
 
     await user.findOneAndUpdate({ Username: req.params.username }, {
+
         $push: {
-            movieTitles: req.params.movieId
+            movieId: req.body.movieId
         }
+
     },
-        { new: true }).then(userUpd => {
+        { new: true })
+        .then(userUpd => {
             return res.json(userUpd)
         }).catch(err => {
             res.status(500).send(`Error: ${err}`)
@@ -76,22 +108,39 @@ app.post('/users/:username/movies/:movieId', passport.authenticate('jwt', { sess
 
 
 
-app.post('/movies', passport.authenticate('jwt', { session: false }), async (req, res) => {
+app.post('/movies', [
+    // title is not empty and alphanumeric 
+    check(['title', 'Only include alphanumeric characters']).isAlphanumeric(),
+    check(['title', 'Only include alphanumeric characters']).not().isEmpty(),
+    // genere is not empty and alphanumeric
+    check(['genre', 'Only include alphanumeric characters']).isAlphanumeric(),
+    check(['genre', 'Only include alphanumeric characters']).not().isEmpty(),
+    // director name, bio, 
+    check(['director.name', 'Only include alphanumeric characters']).isAlphanumeric(),
+    check(['director.bio', 'Only include alphanumeric characters']).isAlphanumeric(),
+    check(['director.birthday', 'Only include alphanumeric characters']).isDate(),
+    check(['director.death', 'Only include alphanumeric characters']).isDate()
 
-    // const newUser = req.body;
+
+
+], passport.authenticate('jwt', { session: false }), async (req, res) => {
+
     await user.findOne({ title: req.body.title }).then((nMovie) => {
 
         if (nMovie) {
             return res.status(400).send(`${req.body.name} already exists`);
         } else {
             movie.create({
+
                 title: req.body.title,
                 genre: req.body.email,
                 director: {
-                    bio: req.body.director.bio,
+
                     name: req.body.director.name,
+                    bio: req.body.director.bio,
                     birthday: req.body.director.birthday,
                     death: req.body.director.death
+
                 },
                 image: req.body.image
             }).then((movie) => {
@@ -182,7 +231,7 @@ app.get('/movies/director/:dirName', passport.authenticate('jwt', { session: fal
 
 //UPDATE///
 
-app.put('/users/:username', passport.authenticate('jwt', { session: false }), async (req, res) => {
+app.put('/users/:username', [check('Username', '')], passport.authenticate('jwt', { session: false }), async (req, res) => {
     if (req.user.Username !== req.params.username) {
         console.log(req.user.Username);
         return res.status(400).send('Permission Denied');
@@ -258,8 +307,8 @@ app.use((err, req, res, next) => {
     console.log(err.stack);
     res.status(500).send(`Error: ${err}`)
 });
-
-app.listen(8080, () => {
-    console.log('You are connected and listening to port 8080');
+const port = process.env.PORT || 8080;
+app.listen(port, "0.0.0.0", () => {
+    console.log(`listening on port ${port}`);
 });
 
