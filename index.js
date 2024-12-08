@@ -33,7 +33,8 @@ require = ('./passport');
 // logs entries into the terminal
 app.use(morgan('common'));
 
-mongoose.connect('mongodb://localhost:27017/myMovie')
+//mongoose.connect('mongodb://localhost:27017/myMovie')
+mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 
 ///CREATE///
 
