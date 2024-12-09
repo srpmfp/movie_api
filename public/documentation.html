@@ -13,7 +13,17 @@
         <h1>Movie API Documentation</h1>
         <p>This API is to provide users access to info on movies, their directors, and genres..no</p>
         <div class="userCont textCont">
-            <h2 aria-label="User Section">Users</h2>
+<h2 aria-label="login formatting">Login</h2>
+            <!--     LOG IN USER-->
+                 <a href="#loginPost">
+                <b>
+                    <span>POST</span>
+                    /login
+                </b>
+                | log in user
+            </a>
+
+<h2 aria-label="User Section">Users</h2>
 
             <!--    CREATE NEW USER-->
             <a href="#userPost">
@@ -28,7 +38,7 @@
             <a href="#userMoviePost">
                 <b>
                     <span>POST</span>
-                   /users/:id/movies/:movieId
+                   /users/:username
                 </b>
                 | add movie to users favorite
                 <br>
@@ -117,6 +127,29 @@
                 <th>Response Body Data Format</th>
             </tr>
             <tr>
+                <td class="titleTable" colspan="5">Login</td>
+            </tr>
+<tr id="loginPost">
+                <td>Log in user</td>
+                <td>/login</td>
+                <td>Post</td>
+                <td>
+                    <div class="json">
+                        <br>
+                        <div class="indent">{</div>
+                        "Username": "kyle murphy",
+                        <br>
+                        "Password": "badPassword123",
+                        <br>
+                        "email":"km@km.com"
+                        <br>
+                        <div class="indent"> }</div>
+                        <br>
+                    </div>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
                 <td class="titleTable" colspan="5">Users</td>
             </tr>
             <!-- New User -->
@@ -128,7 +161,7 @@
                     <div class="json">
                         <br>
                         <div class="indent">{</div>
-                        "name": "kyle murphy",
+                        "Username": "kyle murphy",
                         <br>
                         "movieTitle": []
                         <br>
@@ -141,39 +174,59 @@
             <!-- User Add Movie -->
             <tr id="userMoviePost">
                 <td>Add movie to users favorite</td>
-                <td>/users/:id/:movieTitle</td>
+                <td>/users/:username</td>
                 <td>Post</td>
                 <td>
                     <div class="json">
                         {
                         <br>
-                        movieTitle: "the good the bad and the ugly"
+                        movieId: "674248eba8270506fd0d8197"
                         <br>
                         }
                     </div>
                 </td>
-                <td></td>
+                
+                <td><div class="json"> "_id": "id#",<br>
+    "Username": "##",<br>
+    "Password": "password hash",<br>
+    "email": "example@example.com",<br>
+    "movieId": [<br>
+        <span>"674248eba8270506fd0d8197"</span>,
+    ],<br>
+    "__v": 0<br>
+}
+</div>
+</td>
             </tr>
 
             <!-- User Update -->
             <tr id="userPut">
                 <td>Update  User info</td>
-                <td>/users/:id</td>
+                <td>/users/:username</td>
                 <td>PUT</td>
                 <td>
                     <div class="json">
                         <br>
                         {
                         <br>
-                        *"name": "kyle murphy",<br>
-                        *"Email": "test@email.com",<br>
+                        "Username": "kyle murphy",<br>
+                        "Email": "test@email.com",<br>
                         "birthday": "1998-03-24", (YYYY-MM-DD)<br>
-                        "movieTitles": "234234235667" (movieIds)
                         <br>
                         }
                     </div>
                 </td>
-                <td></td>
+                <td><div class="json">
+                        <br>
+                        {
+                        <br>
+                        "Username": "kyle murphy",<br>
+                        "Email": "test@email.com",<br>
+                        "birthday": "1998-03-24", (YYYY-MM-DD)<br>
+                        "movieTitles": "234234235667" (movieIds)
+                        <br>
+                        }
+                    </div></td>
             </tr>
             <!-- User Delete Movie -->
             <tr id="userMovieDelete">
@@ -186,7 +239,7 @@
                         <br>
                         {
                         <br>
-                        "name": "kyle murphy",
+                        "Username": "kyle murphy",
                         <br>
                         "email": "kmurph@nunya.com",
                         <br>

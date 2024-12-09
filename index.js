@@ -86,8 +86,8 @@ app.post('/users', [
 // add movie to userList
 
 app.post('/users/:username/', [
-    check('movieTitles', '').isAlphanumeric(),
-    check('movieTitles').not().isEmpty()
+    check('movieId', '').isAlphanumeric(),
+    check('movieId').not().isEmpty()
 ], passport.authenticate('jwt', { session: false }), async (req, res) => {
 
 
