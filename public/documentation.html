@@ -14,110 +14,7 @@
         <p>This API is to provide users access to info on movies, their directors, and genres.<br>
         use the links below to find formatting, req.body requirements, and resposes from the API</p>
         <div class="userCont textCont">
-<h2 aria-label="login formatting">Login</h2>
-            <!--     LOG IN USER-->
-                 <a href="#loginPost">
-                <b>
-                    <span>POST</span>
-                    /login
-                </b>
-                | log in user
-            </a>
 
-<h2 aria-label="User Section">Users</h2>
-
-            <!--    CREATE NEW USER-->
-            <a href="#userPost">
-                <b>
-                    <span>POST</span>
-                    /users
-                </b>
-                | create new user
-            </a>
-                <!-- ADD MOVIE TO FAV -->
-            <br>
-            <a href="#userMoviePost">
-                <b>
-                    <span>POST</span>
-                   /users/:username
-                </b>
-                | add movie to users favorite
-                <br>
-            </a>
-            <!-- UPDATE USER INFO-->
-            <a href="#userPut">
-                <b>
-                    <span>PUT</span>
-                    /users/:id
-                </b>
-                | update users information
-                <br>
-            </a>
-            <!-- DELETE USER MOVIE -->
-            <a href="#userMovieDelete">
-                <b>
-                    <span>DELETE</span>
-                  /users/:id/movies/:movieId
-                </b>
-                | remove a movie from user's favorite
-                <br>
-            </a>
-            <!-- REMOVE USER -->
-            <a href="#userDelete">
-                <b>
-                    <span>DELETE</span>
-                    /user/:id
-                </b>
-                | remove user
-                <br>
-            </a>
-        </div>
-        <div class="movieCont textCont">
-            <h2 aria-label="Movie Section">Movies</h2>
-            <!-- UPDATE DIR -->
-            <a href="#moviePost">
-                <b>
-                    <span>PUT</span>
-                    /movies/:director/
-                </b>
-                | Update director bio and info 
-                <br>
-            </a>
-
-            <a href="#moviePost">
-                <b>
-                    <span>PUT</span>
-                    /movies/:title
-                </b>
-                | Update the description of the movies
-                <br>
-            </a>
-            
-            <a href="#movieTitleGet">
-                <b>
-                    <span>GET</span>
-                    /movies/:title
-                </b>
-                | selects a movie by title and retrieves its
-      information
-                <br>
-            </a>
-            <a href="#movieGenreGet">
-                <b>
-                    <span>GET</span>
-                    /movies/genre/:genreName
-                </b>
-                | returns information about the genre
-                <br>
-            </a>
-            <a href="#movieDirGet">
-                <b>
-                    <span>GET</span>
-                    /movies/director/:dirName
-                </b>
-                |returns information about the director
-                <br>
-            </a>
         </div>
         <table>
             <tr>
@@ -130,10 +27,10 @@
             <tr>
                 <td class="titleTable" colspan="5">Login</td>
             </tr>
-<tr id="loginPost">
+<tr id="loginPOST">
                 <td>Log in user</td>
                 <td>/login</td>
-                <td>Post</td>
+                <td>POST</td>
                 <td>
                     <div class="json">
                         <br>
@@ -154,10 +51,10 @@
                 <td class="titleTable" colspan="5">Users</td>
             </tr>
             <!-- New User -->
-            <tr id="userPost">
+            <tr id="userPOST">
                 <td>Create new user</td>
                 <td>/users</td>
-                <td>Post</td>
+                <td>POST</td>
                 <td>
                     <div class="json">
                         <br>
@@ -180,10 +77,10 @@
 </div></td>
             </tr>
             <!-- User Add Movie -->
-            <tr id="userMoviePost">
+            <tr id="userMoviePOST">
                 <td>Add movie to users favorite</td>
                 <td>/users/:username</td>
-                <td>Post</td>
+                <td>POST</td>
                 <td>
                     <div class="json">
                         {
@@ -279,7 +176,7 @@
             </tr>
             <tr>
                 <!-- Add movie to List-->
-                <td id="moviePost">Get all movies</td>
+                <td id="moviePOST">Get all movies</td>
                 <td>/movies</td>
                 <td>GET</td>
                 <td>
