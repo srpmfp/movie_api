@@ -253,7 +253,7 @@ app.put('/users/:username', [check('Username', '')], passport.authenticate('jwt'
 
             },
             $push: {
-                movieTitles: updateUser.movieTitles
+                movieId: updateUser.movieId
             }
 
         },
