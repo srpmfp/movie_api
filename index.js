@@ -157,7 +157,7 @@ app.post('/movies', [
 
 // start page//
 app.get('/', (req, res) => {
-    res.send('Welcome to my movie database\n start by adding /movies to your request to see the JSON')
+    res.send('Welcome to Appflix Movie database\n Start by creating a new user or logging in');
 });
 
 
@@ -231,11 +231,12 @@ app.get('/movies/director/:dirName', passport.authenticate('jwt', { session: fal
 
 //UPDATE///
 
-app.put('/users/:username', [check('Username', '')], passport.authenticate('jwt', { session: false }), async (req, res) => {
+app.put('/users/:username', [check('Username', 'No Username Present').not().isEmpty()], passport.authenticate('jwt', { session: false }), async (req, res) => {
     if (req.user.Username !== req.params.username) {
         console.log(req.user.Username);
         return res.status(400).send('Permission Denied');
-    } else {
+    }
+    else {
 
         const updateUser = req.body;
 
@@ -252,11 +253,6 @@ app.put('/users/:username', [check('Username', '')], passport.authenticate('jwt'
 
 
             },
-            $push: {
-                movieId: updateUser.movieId
-            }
-
-        },
             { new: true }
         ).then(updatedUser => {
             return res.status(200).json(updatedUser)
@@ -266,6 +262,9 @@ app.put('/users/:username', [check('Username', '')], passport.authenticate('jwt'
         })
     }
 });
+
+
+
 
 //DELETE
 
@@ -295,7 +294,7 @@ app.delete('/users/:username/movies/:movieId', passport.authenticate('jwt', { se
 
     await user.findOneAndUpdate({ Username: req.params.username }, {
         $pull: {
-            movieTitles: req.params.movieId
+            movieId: req.params.movieId
         }
     },
         { new: true }).then(userUpd => {
