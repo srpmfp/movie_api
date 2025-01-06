@@ -249,6 +249,7 @@ app.put('/users/:username', [check('Username', '')], passport.authenticate('jwt'
                 Username: updateUser.Username,
                 email: updateUser.email,
                 birthday: updateUser.birthday,
+                movieID: updateUser.movieID
 
             }
 
