@@ -252,7 +252,8 @@ app.put('/users/:username', [check('Username', 'No Username Present').not().isEm
                 birthday: updateUser.birthday,
 
 
-            },
+            }
+        },
             { new: true }
         ).then(updatedUser => {
             return res.status(200).json(updatedUser)
@@ -262,7 +263,6 @@ app.put('/users/:username', [check('Username', 'No Username Present').not().isEm
         })
     }
 });
-
 
 
 
