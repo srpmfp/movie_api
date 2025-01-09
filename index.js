@@ -86,30 +86,25 @@ app.post('/users', [
 // add movie to userList
 
 app.post('/users/:username/', [
-    check('movieId', 'please use only Alphanumeric characters').isAlphanumeric(),
-    check('movieId', 'Please enter a movie Id').not().isEmpty(),
-    [check('Username', 'No Username Present').not().isEmpty()]
+    check('movieId', '').isAlphanumeric(),
+    check('movieId').not().isEmpty()
 ], passport.authenticate('jwt', { session: false }), async (req, res) => {
 
-    if (req.user.Username !== req.params.username) {
-        console.log(req.user.Username);
-        return res.status(400).send('Permission Denied');
-    }
-    else {
-        await user.findOneAndUpdate({ Username: req.params.username }, {
 
-            $push: {
-                movieId: req.body.movieId
-            }
+    await user.findOneAndUpdate({ Username: req.params.username }, {
 
-        },
-            { new: true })
-            .then(userUpd => {
-                return res.json(userUpd)
-            }).catch(err => {
-                res.status(500).send(`Error: ${err}`)
-            })
-    });
+        $push: {
+            movieId: req.body.movieId
+        }
+
+    },
+        { new: true })
+        .then(userUpd => {
+            return res.json(userUpd)
+        }).catch(err => {
+            res.status(500).send(`Error: ${err}`)
+        })
+});
 
 
 
@@ -199,10 +194,6 @@ app.get('/movies/genre/:genreName', passport.authenticate('jwt', { session: fals
     const { genreName } = req.params;
     await movie.find({ genre: genreName }).then((genre) => {
 
-        if (req.user.Username !== req.params.username) {
-            console.log(req.user.Username);
-            return res.status(400).send('Permission Denied');
-        }
         if (genre) {
             return res.status(201).json(genre);
         }
@@ -220,8 +211,8 @@ app.get('/movies/genre/:genreName', passport.authenticate('jwt', { session: fals
 // movies by director
 app.get('/movies/director/:dirName', passport.authenticate('jwt', { session: false }), async (req, res) => {
     const { dirName } = req.params;
-
     await movie.find({ "director.name": dirName }).then((movies) => {
+
         // finds movies with directors name
         if (movies.length > 0) {
             const directors = movies.map(movie => movie.director) // maps specific info to new variable
@@ -259,7 +250,6 @@ app.put('/users/:username', [check('Username', 'No Username Present').not().isEm
                 Username: updateUser.Username,
                 email: updateUser.email,
                 birthday: updateUser.birthday,
-
 
 
             }
@@ -302,22 +292,17 @@ app.delete('/users/:username/', passport.authenticate('jwt', { session: false })
 // remove movies from list
 app.delete('/users/:username/movies/:movieId', passport.authenticate('jwt', { session: false }), async (req, res) => {
 
-    if (req.user.Username !== req.params.username) {
-        console.log(req.user.Username);
-        return res.status(400).send('Permission Denied');
-    }
-    else {
-        await user.findOneAndUpdate({ Username: req.params.username }, {
-            $pull: {
-                movieId: req.params.movieId
-            }
-        },
-            { new: true }).then(userUpd => {
-                return res.json(userUpd)
-            }).catch(err => {
-                res.status(500).send(`Error: ${err}`)
-            })
-    })
+    await user.findOneAndUpdate({ Username: req.params.username }, {
+        $pull: {
+            movieId: req.params.movieId
+        }
+    },
+        { new: true }).then(userUpd => {
+            return res.json(userUpd)
+        }).catch(err => {
+            res.status(500).send(`Error: ${err}`)
+        })
+})
 
 
 //error handling
