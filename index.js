@@ -89,7 +89,10 @@ app.post('/users/:username/', [
     check('movieId', '').isAlphanumeric(),
     check('movieId').not().isEmpty()
 ], passport.authenticate('jwt', { session: false }), async (req, res) => {
-
+    if (req.user.Username !== req.params.username) {
+        console.log(req.user.Username);
+        return res.status(400).send('Permission Denied');
+    }
 
     await user.findOneAndUpdate({ Username: req.params.username }, {
 
