@@ -35,8 +35,6 @@ app.use(morgan('common'));
 
 //mongoose.connect('mongodb://localhost:27017/myMovie')
 mongoose.connect(process.env.CONNECTION_URI)
-
-
 ///CREATE///
 
 // adding user
@@ -45,7 +43,6 @@ app.post('/users', [
     // input validation
     check('Username', 'Username is required')
         .not().isEmpty(),
-    check('Password', 'Password is required').not().isEmpty(),
     check('Username', 'Username contains non-alphanumeric characters')
         .isAlphanumeric(),
     check('email', 'Email does not appear to be valid')
@@ -57,33 +54,33 @@ app.post('/users', [
         await user.findOne({ Username: req.body.Username }).then((nUser) => {
 
             // empty pw check
-            //if (!req.body.Password) {
-            //  res.status(500).send('Error: Password cannot be empty')
-            //} else {
-            if (nUser) {
-                //  username already exists
-                return res.status(400).send(`${req.body.name} already exists`);
+            if (!req.body.Password) {
+                res.status(500).send('Error: Password cannot be empty')
             } else {
-                // create user
-                user.create({
+                if (nUser) {
+                    //  username already exists
+                    return res.status(400).send(`${req.body.name} already exists`);
+                } else {
+                    // create user
+                    user.create({
 
-                    Username: req.body.Username,
-                    email: req.body.email,
-                    Password: hashedPassword,
-                    birthday: req.body.birthday,
-                    movieId: []
+                        Username: req.body.Username,
+                        email: req.body.email,
+                        Password: hashedPassword,
+                        birthday: req.body.birthday,
+                        movieTitles: []
 
-                }).then((user) => {
+                    }).then((user) => {
 
-                    res.status(200).json(user);
+                        res.status(200).json(user);
 
-                }).catch((err) => {
+                    }).catch((err) => {
 
-                    res.status(500).send(`Error: ${err}`)
-                })
-            };
-        }
-        )
+                        res.status(500).send(`Error: ${err}`)
+                    })
+                };
+            }
+        })
     });
 
 // add movie to userList
@@ -92,13 +89,11 @@ app.post('/users/:username/', [
     check('movieId', '').isAlphanumeric(),
     check('movieId').not().isEmpty()
 ], passport.authenticate('jwt', { session: false }), async (req, res) => {
-
-    //checks if JWT username matches the username in the request
     if (req.user.Username !== req.params.username) {
         console.log(req.user.Username);
         return res.status(400).send('Permission Denied');
     }
-    // searches for user and updates movieId array
+
     await user.findOneAndUpdate({ Username: req.params.username }, {
 
         $push: {
@@ -107,13 +102,8 @@ app.post('/users/:username/', [
 
     },
         { new: true })
-
-        // returns updated user
         .then(userUpd => {
             return res.json(userUpd)
-
-
-            // error handling
         }).catch(err => {
             res.status(500).send(`Error: ${err}`)
         })
