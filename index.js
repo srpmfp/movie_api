@@ -315,7 +315,7 @@ app.use((err, req, res, next) => {
     console.log(err.stack);
     res.status(500).send(`Error: ${err}`)
 });
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 8080 || 1234;
 app.listen(port, "0.0.0.0", () => {
     console.log(`listening on port ${port}`);
 });
