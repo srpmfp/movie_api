@@ -167,14 +167,16 @@ app.get('/', (req, res) => {
 
 
 // movies
-app.get('/movies', passport.authenticate('jwt', { session: false }), async (req, res) => {
-    await movie.find().then(movie => {
-        res.status(201).json(movie)
-    }).catch(err => {
-        res.status(500).send(`Error: ${err}`)
-    })
+app.get('/movies',
+    // passport.authenticate('jwt', { session: false }),
+    async (req, res) => {
+        await movie.find().then(movie => {
+            res.status(201).json(movie)
+        }).catch(err => {
+            res.status(500).send(`Error: ${err}`)
+        })
 
-});
+    });
 
 
 // movies by title
