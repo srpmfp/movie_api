@@ -68,7 +68,7 @@ app.post('/users', [
                         email: req.body.email,
                         Password: hashedPassword,
                         birthday: req.body.birthday,
-                        movieTitles: []
+                        movieId: []
 
                     }).then((user) => {
 
