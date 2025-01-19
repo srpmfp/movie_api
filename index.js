@@ -15,19 +15,16 @@ const { check, validationResult } = require('express-validator');
 
 
 // gathering static HTML pages from public
-
-
-let cors = require('cors');
-app.use(cors());
-let auth = require('./auth')(app);
 app.use(express.static('public'));
-
 app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(bodyParser.json());
 
+let cors = require('cors');
+app.use(cors());
 
+let auth = require('./auth')(app);
 const passport = require('passport');
 require = ('./passport');
 
