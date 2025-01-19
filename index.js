@@ -15,8 +15,9 @@ const { check, validationResult } = require('express-validator');
 
 
 // gathering static HTML pages from public
-let auth = require('./auth')(app);
+
 app.use(express.static('public'));
+let auth = require('./auth')(app);
 app.use(bodyParser.urlencoded({
     extended: true
 }));
