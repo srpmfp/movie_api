@@ -242,14 +242,14 @@ app.put(
       return res.status(400).send('Permission Denied');
     } else {
       const updateUser = req.body;
-      
+
       // Only hash password if it's provided and not empty
       let updateFields = {
         Username: updateUser.Username,
         email: updateUser.email,
         birthday: updateUser.birthday,
       };
-      
+
       if (updateUser.Password && updateUser.Password.trim() !== '') {
         updateFields.Password = user.hashPassword(updateUser.Password);
       }
@@ -268,6 +268,7 @@ app.put(
         });
     }
   }
+);
 
 //DELETE
 
