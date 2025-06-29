@@ -168,6 +168,9 @@ app.get('/users/:username', passport.authenticate('jwt', { session: false }), as
       if (req.user.Username !== req.params.username) {
         return res.status(400).send('Unauthorized access');
       } else {
+        if (user.length === 0) {
+          return res.status(404).send('User not found');
+        }
         res.status(201).json(user);
       }
     })
