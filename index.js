@@ -163,18 +163,18 @@ app.get('/users/:username', passport.authenticate('jwt', { session: false }), as
   await user
 
     .find({ username: username })
-})
-  .then((users) => {
-    if (!req.user.Username !== req.params.username) {
-      return res.status(400).send('Unauthorized access');
-    } else {
-      res.status(201).json(users);
-    }
-  })
-  .catch((err) => {
-    res.status(500).send(`Error: ${err}`);
-  });
 
+    .then((user) => {
+      if (!req.user.Username !== req.params.username) {
+        return res.status(400).send('Unauthorized access');
+      } else {
+        res.status(201).json(user);
+      }
+    })
+    .catch((err) => {
+      res.status(500).send(`Error: ${err}`);
+    });
+})
 
 // movies
 app.get('/movies', passport.authenticate('jwt', { session: false }), async (req, res) => {
