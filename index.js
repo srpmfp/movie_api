@@ -162,7 +162,7 @@ app.get('/users/:username', passport.authenticate('jwt', { session: false }), as
   const { username } = req.params;
   await user
 
-    .find({ username: username })
+    .find({ Username: username })
 
     .then((user) => {
       if (req.user.Username !== req.params.username) {
