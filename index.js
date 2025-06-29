@@ -158,6 +158,24 @@ app.get('/', (req, res) => {
   res.send('Welcome to Appflix Movie database\n Start by creating a new user or logging in');
 });
 
+app.get('/users/:username', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  const { username } = req.params;
+  await user
+
+    .find({ username: username })
+})
+  .then((users) => {
+    if (!req.user.Username !== req.params.username) {
+      return res.status(400).send('Unauthorized access');
+    } else {
+      res.status(201).json(users);
+    }
+  })
+  .catch((err) => {
+    res.status(500).send(`Error: ${err}`);
+  });
+
+
 // movies
 app.get('/movies', passport.authenticate('jwt', { session: false }), async (req, res) => {
   await movie
