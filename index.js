@@ -203,6 +203,27 @@ app.get('/', (req, res) => {
   res.send('Welcome to Appflix Movie database\n Start by creating a new user or logging in');
 });
 
+app.get('/users/:username', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  const { username } = req.params;
+  await user
+
+    .find({ Username: username })
+
+    .then((user) => {
+      if (req.user.Username !== req.params.username) {
+        return res.status(400).send('Unauthorized access');
+      } else {
+        if (user.length === 0) {
+          return res.status(404).send('User not found');
+        }
+        res.status(201).json(user);
+      }
+    })
+    .catch((err) => {
+      res.status(500).send(`Error: ${err}`);
+    });
+})
+
 /**  #GET all movies
  *
  * @name GetMovies 
@@ -425,19 +446,22 @@ app.put(
       return res.status(400).send('Permission Denied');
     } else {
       const updateUser = req.body;
-      hashedPassword = user.hashPassword(updateUser.Password);
+
+      // Only hash password if it's provided and not empty
+      let updateFields = {
+        Username: updateUser.Username,
+        email: updateUser.email,
+        birthday: updateUser.birthday,
+      };
+
+      if (updateUser.Password && updateUser.Password.trim() !== '') {
+        updateFields.Password = user.hashPassword(updateUser.Password);
+      }
 
       await user
         .findOneAndUpdate(
           { Username: req.params.username },
-          {
-            $set: {
-              Username: updateUser.Username,
-              email: updateUser.email,
-              birthday: updateUser.birthday,
-              Password: hashedPassword,
-            },
-          },
+          { $set: updateFields },
           { new: true }
         )
         .then((updatedUser) => {

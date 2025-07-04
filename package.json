@@ -1,7 +1,7 @@
 {
   "name": "movie_api",
   "version": "1.0.0",
-  "description": "An app that gathers Move titles, genre, and images related to a database of movies",
+  "description": "An app that gathers movie titles, genre, and images related to a database of movies",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js",
